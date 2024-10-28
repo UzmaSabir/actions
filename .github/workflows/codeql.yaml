@@ -22,6 +22,7 @@ jobs:
         id: set-matrix
         uses: advanced-security/set-codeql-language-matrix@245a56dc4c677e128c650a2098f12036906a2997 #v1.2.1
         with:
+          access-token: ${{ secrets.GITHUB_TOKEN }}
           endpoint: ${{ github.event.repository.languages_url }}
           exclude: 'c, c++, csharp, go, python, ruby'
           
