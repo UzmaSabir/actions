@@ -1,4 +1,4 @@
-name: Docker push
+name: maven docker push
 
 on:
   push:
