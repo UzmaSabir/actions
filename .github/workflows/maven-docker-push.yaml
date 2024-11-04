@@ -1,11 +1,16 @@
 name: maven docker push
 
 on:
-  push:
-    branches: [ "master" ]
-permissions:
-  packages: write
-  contents: read
+  workflow_call:
+    inputs:
+      java-version:
+        required: false
+        type: string
+        default: "21"
+      image-name:
+        required: true
+        type: string
+        default: "mgmj"
 
 jobs:
   docker:
@@ -16,7 +21,7 @@ jobs:
 
       - name: Set Environment Variables
         run: |
-          IMG=mgmj
+          IMG={{ inputs.image-name }}
           OWNER="$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')"
           echo "IMG=${IMG}" >> $GITHUB_ENV
           echo "IMAGE=ghcr.io/${OWNER}/${IMG}" >> $GITHUB_ENV
@@ -25,7 +30,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4.5.0
         with:
-          java-version: 21
+          java-version: ${{ inputs.java-version }}
           distribution: "temurin"
           cache: maven
 
