@@ -24,6 +24,8 @@ jobs:
         shell: bash
         run: |
           echo "short_sha=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_OUTPUT
+          echo "owner=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
+          echo "repo_name=$(basename ${{ github.repository }})" >> $GITHUB_OUTPUT
 
       - name: Set up JDK
         uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4.5.0
@@ -63,4 +65,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.buildinfo.outputs.short_sha}}-SHA
+          tags: ${{ env.REGISTRY }}/${{ steps.buildinfo.outputs.owner }}/${{ steps.buildinfo.outputs.repo_name }}:${{ steps.buildinfo.outputs.short_sha}}-SHA
