@@ -7,10 +7,10 @@ on:
         required: false
         type: string
         default: "21"
-      image-name:
-        required: true
-        type: string
-        default: "mgmj"
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   docker:
@@ -20,12 +20,11 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
       - name: Set Environment Variables
+        id: buildinfo
+        shell: bash
         run: |
-          IMG={{ inputs.image-name }}
+          echo "short_sha=$(git rev-parse --short ${{ github.sha }})" >> $GITHUB_OUTPUT
           OWNER="$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')"
-          echo "IMG=${IMG}" >> $GITHUB_ENV
-          echo "IMAGE=ghcr.io/${OWNER}/${IMG}" >> $GITHUB_ENV
-          echo "GIT_REF=$(git symbolic-ref -q --short HEAD || git describe --tags --exact-match)" >> $GITHUB_ENV
 
       - name: Set up JDK
         uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4.5.0
@@ -65,4 +64,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ env.IMAGE }}:latest
+          tags: ${{ env.REGISTRY }}/${ OWNER }/${{ env.IMAGE_NAME }}:${{ steps.buildinfo.outputs.short_sha}}-SHA
