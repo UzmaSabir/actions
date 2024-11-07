@@ -72,5 +72,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME}}:${{ steps.buildinfo.outputs.short_sha}}-SHA
+          tags: ${{ env.REGISTRY }}/${{ steps.buildinfo.outputs.owner }}/${{ steps.buildinfo.outputs.repo_name }}:${{ steps.buildinfo.outputs.short_sha}}-SHA
